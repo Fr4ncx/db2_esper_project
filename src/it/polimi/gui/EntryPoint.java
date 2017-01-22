@@ -3,7 +3,6 @@ package it.polimi.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,9 +12,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -31,17 +32,27 @@ public class EntryPoint {
 	public static JFrame frame;
 	private static JPanel panel;
 	public static JPanel panelCenter;
-	public static JPanel panelWeekly;
+	public static JPanel principalPanel;
 	public static JPanel panelDaily;
+	public static JPanel panelWeekly;
+	public static JPanel housePanel;
+	public static JPanel switchStatusPanel;
 	public static JButton btnStart;
-	public static JTree tree;
-	public static DefaultTreeModel model;
-	public static DefaultMutableTreeNode root;
+	public static JTree dailyTree;
+	public static JTree weeklyTree;
+	public static JTree houseTree;
+	public static DefaultTreeModel dailyModel;
+	public static DefaultMutableTreeNode dailyRoot;
+	public static DefaultTreeModel weeklyModel;
+	public static DefaultMutableTreeNode weeklyRoot;
+	public static DefaultTreeModel houseModel;
+	public static DefaultMutableTreeNode houseRoot;
+	private boolean isFirstTime;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					new EntryPoint();
@@ -64,7 +75,7 @@ public class EntryPoint {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
+		isFirstTime = true;
 		frame = new JFrame("BRiDGe Real Time Monitoring");
 		ImageIcon img = new ImageIcon(EntryPoint.class.getResource("/images/favicon.png"));
 		frame.setIconImage(img.getImage());
@@ -85,24 +96,25 @@ public class EntryPoint {
 		btnStart.setIcon(new ImageIcon(EntryPoint.class.getResource("/images/start.png")));
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!isFirstTime) {
+					JOptionPane.showMessageDialog(EntryPoint.frame, "Please, reopen the program...", "BRiDGe", JOptionPane.PLAIN_MESSAGE);
+					
+					return;
+				}
+				isFirstTime = false;
 				btnStart.setEnabled(false);
-				panelDaily.removeAll();
-				panelDaily.revalidate();
-				panelDaily.repaint();
 				panelCenter.removeAll();
-
 				panelCenter.revalidate();
 				panelCenter.repaint();
-				panelWeekly.revalidate();
-				panelWeekly.repaint();
+				GridBagConstraints gbc = new GridBagConstraints();
+				gbc.gridwidth = 1;
+				gbc.gridx = 1;
+				gbc.gridy = 1;
+				gbc.insets = new Insets(5, 5, 5, 5);
 				JPanel loader_p = new JPanel();
 				JLabel j = new JLabel(new ImageIcon(EntryPoint.class.getResource("/images/ajax-loader.gif")));
 				loader_p.add(j);
-				panelWeekly.add(loader_p, BorderLayout.CENTER);
-			 	panelWeekly.setBackground(Color.WHITE);
-
-				panelWeekly.revalidate();
-				panelWeekly.repaint();
+				panelCenter.add(loader_p, gbc);
 				Thread t1 = new Thread(p);
 				t1.start();
 			
@@ -116,42 +128,78 @@ public class EntryPoint {
 		// Left panel ( Last usage results )
 		panelCenter = new JPanel(new GridBagLayout());
 		panelCenter.setBackground(Color.WHITE);	
-		panelCenter.setPreferredSize(new Dimension(235, 90));
-		panelCenter.setMinimumSize(new Dimension(235, 90));
+		panelCenter.setPreferredSize(new Dimension(240, 90));
+		panelCenter.setMinimumSize(new Dimension(240, 90));
 	 	final JScrollPane scroll = new JScrollPane(panelCenter);
 		frame.getContentPane().add(scroll, BorderLayout.WEST);
 		
 		// Daily panel
 		panelDaily = new JPanel(new BorderLayout(0, 0));		
-		panelDaily.setPreferredSize(new Dimension(235, 90));
-		panelDaily.setMinimumSize(new Dimension(235, 90));
+		panelDaily.setPreferredSize(new Dimension(260, 90));
+		panelDaily.setMinimumSize(new Dimension(260, 90));
 		final JScrollPane scrollDaily = new JScrollPane(panelDaily);
 		frame.getContentPane().add(scrollDaily, BorderLayout.EAST);
 		// JTree daily results
-		DefaultMutableTreeNode root1 = new DefaultMutableTreeNode("Consumption values");
-		model = new DefaultTreeModel(root1);
-		root = (DefaultMutableTreeNode) model.getRoot();
+		DefaultMutableTreeNode root1 = new DefaultMutableTreeNode("Daily Consumption...");
+		dailyModel = new DefaultTreeModel(root1);
+		dailyRoot = (DefaultMutableTreeNode) dailyModel.getRoot();
 		DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode("No values...");
-		root.add(deviceNode);
-		tree = new JTree(root);
-		model.reload(root);
-		JScrollPane sp = new JScrollPane(tree);
+		dailyRoot.add(deviceNode);
+		dailyTree = new JTree(dailyRoot);
+		dailyModel.reload(dailyRoot);
+		JScrollPane sp = new JScrollPane(dailyTree);
 	 	panelDaily.add(BorderLayout.CENTER, sp);
 	 	
-	 	// Weekly panel
-	 	panelWeekly = new JPanel(new BorderLayout(0, 0));		
-	 	panelWeekly.setBackground(Color.WHITE);
-	 	panelWeekly.setPreferredSize(new Dimension(235, 90));
-	 	panelWeekly.setMinimumSize(new Dimension(235, 90));
-		final JScrollPane scrollWeekly = new JScrollPane(panelWeekly);
-		frame.getContentPane().add(scrollWeekly, BorderLayout.CENTER);
+	 	// Centered panel
+	 	principalPanel = new JPanel();		
+	 	principalPanel.setBackground(Color.WHITE);
+		principalPanel.setLayout(new BorderLayout(0, 0));
 		
+		// Weekly panel
+		panelWeekly = new JPanel(new BorderLayout(0, 0));
+		panelWeekly.setPreferredSize(new Dimension(250, 90));
+		panelWeekly.setMinimumSize(new Dimension(250, 90));
+		// JTree daily results
+		DefaultMutableTreeNode weekRoot = new DefaultMutableTreeNode("Weekly Consumption...");
+		weeklyModel = new DefaultTreeModel(weekRoot);
+		weeklyRoot = (DefaultMutableTreeNode) weeklyModel.getRoot();
+		DefaultMutableTreeNode weekNode = new DefaultMutableTreeNode("No values...");
+		weeklyRoot.add(weekNode);
+		weeklyTree = new JTree(weeklyRoot);
+		weeklyModel.reload(weeklyRoot);
+		JScrollPane sp1 = new JScrollPane(weeklyTree);
+		panelWeekly.add(BorderLayout.CENTER, sp1);
+		principalPanel.add(panelWeekly, BorderLayout.EAST);
+		frame.getContentPane().add(principalPanel, BorderLayout.CENTER);
+		
+		// Overall house consumption
+		housePanel = new JPanel(new BorderLayout(0, 0));
+		housePanel.setBackground(Color.WHITE);	
+		housePanel.setPreferredSize(new Dimension(250, 90));
+		housePanel.setMinimumSize(new Dimension(250, 90));
+		// house tree
+		DefaultMutableTreeNode houseRoot = new DefaultMutableTreeNode("Overall House energy consumption...");
+		houseModel = new DefaultTreeModel(houseRoot);
+		houseRoot = (DefaultMutableTreeNode) houseModel.getRoot();
+		houseRoot.add(weekNode);
+		houseTree = new JTree(houseRoot);
+		houseModel.reload(houseRoot);
+		JScrollPane sp2 = new JScrollPane(houseTree);
+		housePanel.add(BorderLayout.CENTER, sp2);
+		principalPanel.add(housePanel, BorderLayout.CENTER);
+		
+		// Switch status panel
+		switchStatusPanel = new JPanel(new GridBagLayout());
+		switchStatusPanel.setBackground(Color.WHITE);	
+		switchStatusPanel.setPreferredSize(new Dimension(250, 90));
+		switchStatusPanel.setMinimumSize(new Dimension(250, 90));
+		principalPanel.add(switchStatusPanel, BorderLayout.WEST);
 	 	
-	 	
-		noContent();
+		noContent(panelCenter, "Last usage...");
+		noContent(switchStatusPanel, "Switch status...");
 	}
 	
-	public static void noContent() {	
+	public static void noContent(JPanel panel, String message) {	
 			JPanel p = new JPanel();
 			p.setBackground(Color.WHITE);
 			GridBagConstraints gbc = new GridBagConstraints();
@@ -160,15 +208,15 @@ public class EntryPoint {
 			gbc.gridy = 1;
 			gbc.insets = new Insets(5, 5, 5, 5);
 
-			JLabel label = new JLabel("Last usage...");
+			JLabel label = new JLabel(message);
 			label.setBackground(Color.WHITE);
 			label.setFont(new Font("Segoe Print", Font.BOLD, 18));
 			label.setForeground(new Color(102, 153, 204));
 			p.add(label);
 						
-			panelCenter.add(p,gbc);
-			panelCenter.revalidate();
-			panelCenter.repaint();
+			panel.add(p,gbc);
+			panel.revalidate();
+			panel.repaint();
 	}
 
 }

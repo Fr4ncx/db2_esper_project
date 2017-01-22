@@ -1,5 +1,6 @@
 package it.polimi.bridge;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.json.simple.JSONObject;
 
@@ -20,12 +21,15 @@ public class Tick {
 	Long seq;
 	String deviceId;
 	String value;
+	String weekOfMonth;
 	Float value_int;
 	Long ts;
     String house_id, message_type, dateString;
     Date syncDate;
    
     public Tick(JSONObject obj) {
+    	SimpleDateFormat weekOfMonth = new SimpleDateFormat("W");
+
     	JSONObject _id = (JSONObject) obj.get("_id");
     	this.id = (String) _id.get("$oid");
     	JSONObject message = (JSONObject) obj.get("message");
@@ -34,6 +38,7 @@ public class Tick {
     	this.seq = (Long) obj.get("seq");
     	this.ts = (Long) message.get("uts");
     	this.syncDate = new Date(this.ts * 1000);
+    	this.weekOfMonth = weekOfMonth.format(this.syncDate);
     	this.dateString = syncDate.toString();
     	this.message_type = (String) obj.get("message_type");
     	this.value = String.valueOf(message.get("value"));
@@ -61,6 +66,7 @@ public class Tick {
     public Date getSyncDate() { return syncDate; }
     public String getValue () { return value; }
     public Float getValue_int () { return value_int; }
+    public String getWeekOfMonth() { return weekOfMonth; };
     public String getDateString () { return dateString; }
     @Override
     public String toString() {
