@@ -16,16 +16,16 @@ import com.espertech.esper.client.UpdateListener;
 import it.polimi.gui.EntryPoint; 
 
 /**
- * Device listener (last usage for each appliance) 
+ * Device listener 
  *  
- * Listeners are invoked by the engine in response to one or more events that change a statement's result set. Listeners implement the UpdateListener 
- * interface and act on EventBean instances as the next code snippet outlines 
+ * Listeners implement the UpdateListener 
+ * interface and act on EventBean instances 
  * 
  * @class Listener 
  * @author Francesco Tria 
  * 
  */ 
-public class Listener implements UpdateListener { 
+public class UsageListener implements UpdateListener { 
 	
 	 HashMap<String, String> hmap = new HashMap<String, String>();
 	 

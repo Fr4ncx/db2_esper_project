@@ -19,22 +19,16 @@ import it.polimi.gui.EntryPoint;
 /**
  * OverallHouseListener
  *  
- * Listeners implement the UpdateListener 
- * interface and act on EventBean instances as the next code snippet outlines 
+ * OverallHouseListener implement the UpdateListener 
+ * interface and act on EventBean instances 
  *  
  * @author Francesco Tria 
  * @class OverallHouseListener
  * 
  */ 
 public class OverallHouseListener implements UpdateListener { 
-	// First HashMap
-	// Primary key: deviceId 
-	// Value: new HashMap<String, String>
-	// Primary key: date of rilevation 
-	// Value: power consumption 
 	HashMap<String, Double> houseMap = new HashMap<String, Double>();
     private JTree tree;
-
 
 	@Override 
 	 public void update(EventBean[] newData, EventBean[] oldData) {
@@ -47,8 +41,7 @@ public class OverallHouseListener implements UpdateListener {
 		 updateGUI();
 	 }
 	 
-	 private void updateGUI () {
-		
+	 private void updateGUI () {	
 		 // Update GUI with SwingUtilities.invokeLater       	  	
 		 SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -83,10 +76,10 @@ public class OverallHouseListener implements UpdateListener {
  	}
 				
 	 private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
-		 for(int i = startingIndex; i < rowCount; ++i) {
+		 for (int i = startingIndex; i < rowCount; ++i) {
 			 tree.expandRow(i);
 		 }
-		 if(tree.getRowCount() != rowCount)
+		 if (tree.getRowCount() != rowCount)
 			 expandAllNodes(tree, rowCount, tree.getRowCount());
 	}
 }

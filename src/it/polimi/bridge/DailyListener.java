@@ -21,18 +21,14 @@ import it.polimi.gui.EntryPoint;
  * Daily Listener
  *  
  * Listeners implement the UpdateListener 
- * interface and act on EventBean instances as the next code snippet outlines 
+ * interface and act on EventBean instances 
  *  
  * @author Francesco Tria 
  * @class DailyListener
  * 
  */ 
 public class DailyListener implements UpdateListener { 
-	// First HashMap
-	// Primary key: deviceId 
-	// Value: new HashMap<String, String>
-	// Primary key: date of rilevation 
-	// Value: power consumption 
+
 	HashMap<String, HashMap<String, Double>> hmap = new HashMap<String, HashMap<String, Double> >();
     private JTree tree;
 

@@ -35,7 +35,7 @@ public class Parser implements Runnable {
 		//The Configuration is meant only as an initialization-time object.
 		Configuration cepConfig = new Configuration();
 		// We register Ticks as objects the engine will have to handle
-		cepConfig.addEventType("StockEvent", Tick.class.getName());		
+		cepConfig.addEventType("StockEvent", PowerMeter.class.getName());		
 		cepConfig.addEventType("SwitchEvent", BinarySwitch.class.getName());	
 		// We setup the engine
 		cep = EPServiceProviderManager.getProvider("myCEPEngine", cepConfig);
@@ -86,7 +86,7 @@ public class Parser implements Runnable {
 		
 		
 	  	// Listeners
-	  	usageStatement.addListener(new Listener());
+	  	usageStatement.addListener(new UsageListener());
 	  	dailyStatement.addListener(new DailyListener());
 	  	weeklyStatement.addListener(new WeeklyListener());
 	  	houseStatement.addListener(new OverallHouseListener());
@@ -109,7 +109,7 @@ public class Parser implements Runnable {
 				 JSONObject message = (JSONObject) slide.get("message");
 				 JSONObject device = (JSONObject) message.get("device");				 
 				 if (message != null && device != null && device.get("type") != null &&  message.get("event_type") != null && device.get("type").equals("PowerMeter") && message.get("event_type").equals("ValueChangedEvent")) {
-					 Tick tick = new Tick(slide);
+					 PowerMeter tick = new PowerMeter(slide);
 					 // Send event to the EPR Run time
 					 cepRT.sendEvent(tick);    
 					 try {

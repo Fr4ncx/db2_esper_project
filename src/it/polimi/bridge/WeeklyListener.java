@@ -17,6 +17,16 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 import it.polimi.gui.EntryPoint;
 
+/**
+ * Weekly Listener
+ *  
+ * Listeners implement the UpdateListener 
+ * interface and act on EventBean instances 
+ *  
+ * @author Francesco Tria 
+ * @class WeeklyListener
+ * 
+ */ 
 public class WeeklyListener implements UpdateListener {
 	
 	HashMap<String, HashMap<String, JSONObject> > weekMap = new HashMap<String, HashMap<String, JSONObject> >();

@@ -26,7 +26,13 @@ import java.awt.Font;
 
 import it.polimi.bridge.Parser;
 
-
+/**
+ * GUI Entrypoint
+ *  
+ * @author Francesco Tria 
+ * @class EntryPoint
+ * 
+ */ 
 public class EntryPoint {
 
 	public static JFrame frame;

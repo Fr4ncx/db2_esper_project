@@ -4,18 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.json.simple.JSONObject;
 
-
 /**
- * Tick event class
+ * Power meter  class
  *    
- * A sample Java class that represents a device event is shown below. A simple plain-old Java class that provides getter-methods for access to 
+ * Java class that represents a power meter type object, provides getter-methods for access to 
  * properties 
  *  
  * @author Francesco Tria
- * @class Tick
+ * @class PowerMeter
  */ 
 
-public class Tick {
+public class PowerMeter {
 	JSONObject message;
 	String id;
 	Long seq;
@@ -27,7 +26,7 @@ public class Tick {
     String house_id, message_type, dateString;
     Date syncDate;
    
-    public Tick(JSONObject obj) {
+    public PowerMeter(JSONObject obj) {
     	SimpleDateFormat weekOfMonth = new SimpleDateFormat("W");
 
     	JSONObject _id = (JSONObject) obj.get("_id");

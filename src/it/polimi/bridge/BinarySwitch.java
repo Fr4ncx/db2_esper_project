@@ -5,13 +5,10 @@ import org.json.simple.JSONObject;
 
 
 /**
- * Tick event class
+ * Binary Switch Class
  *    
- * A sample Java class that represents a device event is shown below. A simple plain-old Java class that provides getter-methods for access to 
- * properties 
- *  
  * @author Francesco Tria
- * @class Tick
+ * @class BinarySwitch
  */ 
 
 public class BinarySwitch {
